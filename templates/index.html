@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZenQuotes - Mindful Typography & History</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Lora:ital,wght@0,400;0,500;1,400&family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom Style -->
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <!-- Background glow bubbles -->
+    <div class="bg-glow bg-glow-1"></div>
+    <div class="bg-glow bg-glow-2"></div>
+
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="logo">
+                <i class="fa-solid fa-wind logo-icon"></i>
+                <span class="logo-text">ZenQuotes</span>
+            </div>
+            <button id="toggle-history-btn" class="icon-btn" title="View History Logs">
+                <i class="fa-solid fa-clock-rotate-left"></i> History <span class="badge" id="history-count">0</span>
+            </button>
+        </header>
+
+        <!-- Main Quote Display Workspace -->
+        <main class="zen-workspace">
+            <div class="quote-card-container">
+                <!-- Large Fancy Quote Marks -->
+                <span class="quote-mark mark-left">“</span>
+                
+                <div class="quote-display-card" id="quote-card">
+                    <p id="quote-text" class="quote-text">The only way to do great work is to love what you do.</p>
+                    <p id="quote-author" class="quote-author">— Steve Jobs</p>
+                </div>
+                
+                <span class="quote-mark mark-right">”</span>
+
+                <!-- Action Controls -->
+                <div class="action-controls">
+                    <button id="copy-btn" class="action-btn secondary-btn" title="Copy to clipboard">
+                        <i class="fa-regular fa-copy"></i> <span id="copy-text">Copy</span>
+                    </button>
+                    <button id="generate-btn" class="action-btn primary-btn">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i> Inspire Me
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Slide-out History Drawer -->
+    <div class="history-drawer-overlay" id="history-overlay"></div>
+    <div class="history-drawer" id="history-drawer">
+        <div class="drawer-header">
+            <h3><i class="fa-solid fa-history"></i> Inspiration Log</h3>
+            <button id="close-history-btn" class="close-btn"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        
+        <div class="drawer-actions">
+            <button id="clear-history-btn" class="clear-btn-action">
+                <i class="fa-regular fa-trash-can"></i> Clear History
+            </button>
+        </div>
+
+        <div class="drawer-content" id="history-list">
+            <!-- Dynamically Loaded Logs -->
+            <div class="empty-history">
+                <p>No quotes generated yet.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Script -->
+    <script src="/static/app.js"></script>
+</body>
+</html>
