@@ -14,7 +14,8 @@
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-    <!-- Background glow bubbles -->
+    <!-- Background dynamic sweeps -->
+    <div class="bg-sweep" id="bg-sweep"></div>
     <div class="bg-glow bg-glow-1"></div>
     <div class="bg-glow bg-glow-2"></div>
 
@@ -30,10 +31,9 @@
             </button>
         </header>
 
-        <!-- Main Quote Display Workspace -->
+        <!-- Main Quote Workspace -->
         <main class="zen-workspace">
             <div class="quote-card-container">
-                <!-- Large Fancy Quote Marks -->
                 <span class="quote-mark mark-left">“</span>
                 
                 <div class="quote-display-card" id="quote-card">
@@ -45,6 +45,12 @@
 
                 <!-- Action Controls -->
                 <div class="action-controls">
+                    <button id="favorite-btn" class="action-btn secondary-btn" title="Toggle Favorite">
+                        <i class="fa-regular fa-star"></i> <span id="fav-btn-label">Favorite</span>
+                    </button>
+                    <button id="read-btn" class="action-btn secondary-btn" title="Read quote aloud">
+                        <i class="fa-solid fa-volume-high"></i> Listen
+                    </button>
                     <button id="copy-btn" class="action-btn secondary-btn" title="Copy to clipboard">
                         <i class="fa-regular fa-copy"></i> <span id="copy-text">Copy</span>
                     </button>
@@ -56,12 +62,18 @@
         </main>
     </div>
 
-    <!-- Slide-out History Drawer -->
+    <!-- Slide-out Drawer -->
     <div class="history-drawer-overlay" id="history-overlay"></div>
     <div class="history-drawer" id="history-drawer">
         <div class="drawer-header">
             <h3><i class="fa-solid fa-history"></i> Inspiration Log</h3>
             <button id="close-history-btn" class="close-btn"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        
+        <!-- Drawer Tabs -->
+        <div class="drawer-tabs">
+            <button class="drawer-tab active" id="tab-all-history">All History</button>
+            <button class="drawer-tab" id="tab-fav-history"><i class="fa-solid fa-star"></i> Favorites</button>
         </div>
         
         <div class="drawer-actions">
@@ -71,7 +83,6 @@
         </div>
 
         <div class="drawer-content" id="history-list">
-            <!-- Dynamically Loaded Logs -->
             <div class="empty-history">
                 <p>No quotes generated yet.</p>
             </div>

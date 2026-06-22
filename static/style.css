@@ -1,4 +1,4 @@
-/* ZenQuotes Design System */
+/* ZenQuotes Design System & Mindful Elements */
 :root {
     --bg-dark: #030712;
     --card-bg: rgba(17, 24, 39, 0.4);
@@ -6,13 +6,13 @@
     
     --primary: #818cf8;
     --primary-hover: #6366f1;
-    --accent: #c084fc;
+    --accent: #f43f5e; /* Rose pink for favorites */
     
     --text-primary: #f3f4f6;
     --text-muted: #9ca3af;
     
     --transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-    --shadow-glowing: 0 0 30px rgba(99, 102, 241, 0.15);
+    --shadow-glowing: 0 0 35px rgba(99, 102, 241, 0.15);
 }
 
 * {
@@ -30,7 +30,18 @@ body {
     position: relative;
 }
 
-/* Glow Backdrops */
+/* Background sweeps */
+.bg-sweep {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+    background: linear-gradient(135deg, #05040a, #030712, #040d1a);
+    transition: background 1.5s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
 .bg-glow {
     position: absolute;
     border-radius: 50%;
@@ -56,7 +67,7 @@ body {
     right: -100px;
 }
 
-/* App Container */
+/* Container */
 .app-container {
     max-width: 1000px;
     margin: 0 auto;
@@ -100,7 +111,7 @@ body {
     padding: 0.6rem 1.2rem;
     border-radius: 50px;
     cursor: pointer;
-    font-size: 0.9rem;
+    font-size: 0.88rem;
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -121,7 +132,7 @@ body {
     font-size: 0.75rem;
 }
 
-/* Workspace */
+/* Zen Workspace Layout */
 .zen-workspace {
     flex-grow: 1;
     display: flex;
@@ -132,25 +143,25 @@ body {
 
 .quote-card-container {
     position: relative;
-    max-width: 750px;
+    max-width: 780px;
     width: 100%;
     padding: 3rem 1.5rem;
     text-align: center;
 }
 
-/* Huge Quotation Marks */
+/* Huge Quote symbols */
 .quote-mark {
     position: absolute;
     font-size: 8rem;
     font-family: 'Cinzel', serif;
-    color: rgba(129, 140, 248, 0.07);
+    color: rgba(129, 140, 248, 0.06);
     line-height: 1;
     user-select: none;
     pointer-events: none;
 }
 
 .mark-left {
-    top: -1rem;
+    top: -1.5rem;
     left: -1rem;
 }
 
@@ -159,7 +170,7 @@ body {
     right: -1rem;
 }
 
-/* Current Quote Display Card */
+/* Quote Display Card */
 .quote-display-card {
     min-height: 180px;
     display: flex;
@@ -172,13 +183,13 @@ body {
 
 .quote-text {
     font-family: 'Lora', serif;
-    font-size: 2.2rem;
+    font-size: 2.1rem;
     font-weight: 400;
     line-height: 1.6;
     letter-spacing: -0.2px;
     color: var(--text-primary);
     margin-bottom: 1.5rem;
-    transition: opacity 0.3s ease, transform 0.3s ease;
+    transition: opacity 0.35s ease, transform 0.35s ease;
 }
 
 .quote-author {
@@ -188,22 +199,23 @@ body {
     letter-spacing: 2px;
     color: var(--primary);
     opacity: 0.85;
-    transition: opacity 0.3s ease;
+    transition: opacity 0.35s ease;
 }
 
-/* Action controls */
+/* Action Controls button group */
 .action-controls {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 1rem;
+    gap: 0.85rem;
     margin-top: 1rem;
+    flex-wrap: wrap;
 }
 
 .action-btn {
-    padding: 0.9rem 1.8rem;
+    padding: 0.75rem 1.5rem;
     border-radius: 50px;
-    font-size: 0.95rem;
+    font-size: 0.88rem;
     font-weight: 600;
     cursor: pointer;
     display: flex;
@@ -217,12 +229,12 @@ body {
     background: linear-gradient(135deg, var(--primary), var(--primary-hover));
     color: white;
     border: none;
-    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.35);
+    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
 }
 
 .primary-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(99, 102, 241, 0.5), var(--shadow-glowing);
+    box-shadow: 0 8px 22px rgba(99, 102, 241, 0.45), var(--shadow-glowing);
 }
 
 .primary-btn:active {
@@ -230,26 +242,43 @@ body {
 }
 
 .secondary-btn {
-    background: rgba(255, 255, 255, 0.04);
+    background: rgba(255, 255, 255, 0.03);
     border: 1px solid var(--border-glass);
     color: var(--text-primary);
 }
 
 .secondary-btn:hover {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.15);
 }
 
-/* History Slide-out Drawer */
+#favorite-btn.active {
+    background: rgba(244, 63, 94, 0.12);
+    border-color: rgba(244, 63, 94, 0.35);
+    color: var(--accent);
+}
+
+#favorite-btn.active i {
+    color: var(--accent);
+    animation: heartPop 0.3s forwards;
+}
+
+@keyframes heartPop {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.3); }
+    100% { transform: scale(1); }
+}
+
+/* History Side-drawer details */
 .history-drawer-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: rgba(3, 7, 18, 0.6);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
+    background: rgba(3, 7, 18, 0.65);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
     z-index: 100;
     opacity: 0;
     pointer-events: none;
@@ -270,7 +299,7 @@ body {
     height: 100vh;
     background: rgba(17, 24, 39, 0.95);
     border-left: 1px solid var(--border-glass);
-    box-shadow: -10px 0 30px rgba(0, 0, 0, 0.5);
+    box-shadow: -15px 0 35px rgba(0, 0, 0, 0.5);
     z-index: 101;
     display: flex;
     flex-direction: column;
@@ -283,14 +312,14 @@ body {
 
 .drawer-header {
     padding: 1.5rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
 .drawer-header h3 {
-    font-size: 1.15rem;
+    font-size: 1.1rem;
     font-weight: 600;
     display: flex;
     align-items: center;
@@ -301,13 +330,48 @@ body {
     background: transparent;
     border: none;
     color: var(--text-muted);
-    font-size: 1.25rem;
+    font-size: 1.2rem;
     cursor: pointer;
     transition: color 0.2s;
 }
 
 .close-btn:hover {
     color: var(--text-primary);
+}
+
+/* Drawer Tabs */
+.drawer-tabs {
+    display: flex;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    background: rgba(0, 0, 0, 0.15);
+}
+
+.drawer-tab {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    padding: 0.85rem;
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-weight: 600;
+    transition: var(--transition);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+}
+
+.drawer-tab:hover {
+    color: var(--text-primary);
+}
+
+.drawer-tab.active {
+    color: var(--primary);
+    border-bottom: 2px solid var(--primary);
+    background: rgba(255, 255, 255, 0.01);
 }
 
 .drawer-actions {
@@ -321,7 +385,7 @@ body {
     background: transparent;
     border: none;
     color: #f87171;
-    font-size: 0.82rem;
+    font-size: 0.8rem;
     font-weight: 500;
     cursor: pointer;
     display: flex;
@@ -344,17 +408,18 @@ body {
     gap: 1.25rem;
 }
 
-/* History Item Card */
+/* History Item Card details */
 .history-item-card {
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid rgba(255, 255, 255, 0.04);
+    background: rgba(255, 255, 255, 0.01);
+    border: 1px solid rgba(255, 255, 255, 0.03);
     border-radius: 14px;
     padding: 1rem 1.25rem;
+    position: relative;
     transition: var(--transition);
 }
 
 .history-item-card:hover {
-    background: rgba(255, 255, 255, 0.04);
+    background: rgba(255, 255, 255, 0.03);
     border-color: rgba(129, 140, 248, 0.2);
 }
 
@@ -374,16 +439,39 @@ body {
 }
 
 .history-quote-author {
-    font-size: 0.78rem;
+    font-size: 0.75rem;
     font-weight: 600;
     color: var(--primary);
     text-transform: uppercase;
     letter-spacing: 1px;
 }
 
+.history-right-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
 .history-quote-time {
-    font-size: 0.7rem;
+    font-size: 0.68rem;
     color: var(--text-muted);
+}
+
+.history-fav-toggle-btn {
+    background: transparent;
+    border: none;
+    color: #4b5563; /* empty star */
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: var(--transition);
+}
+
+.history-fav-toggle-btn:hover {
+    color: var(--accent);
+}
+
+.history-fav-toggle-btn.active {
+    color: var(--accent);
 }
 
 .empty-history {
@@ -393,7 +481,7 @@ body {
     font-size: 0.9rem;
 }
 
-/* Animations / States */
+/* Animations */
 .fade-out-down {
     opacity: 0;
     transform: translateY(15px);
@@ -404,27 +492,14 @@ body {
 }
 
 @keyframes fadeInUp {
-    0% {
-        opacity: 0;
-        transform: translateY(15px);
-    }
-    100% {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    0% { opacity: 0; transform: translateY(15px); }
+    100% { opacity: 1; transform: translateY(0); }
 }
 
-/* Responsive adjustments */
 @media (max-width: 768px) {
-    .quote-text {
-        font-size: 1.7rem;
-    }
-    .quote-card-container {
-        padding: 2rem 0;
-    }
-    .mark-left, .mark-right {
-        font-size: 5rem;
-    }
+    .quote-text { font-size: 1.6rem; }
+    .quote-card-container { padding: 2rem 0; }
+    .mark-left, .mark-right { font-size: 5.5rem; }
     .mark-left { top: -2rem; left: 0; }
     .mark-right { bottom: 0; right: 0; }
 }

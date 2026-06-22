@@ -8,7 +8,6 @@ app = Flask(__name__, template_folder='templates', static_folder='static')
 
 DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'quotes.db')
 
-# Fallback quotes in case of offline testing or API blockages
 FALLBACK_QUOTES = [
     {"quote": "The only way to do great work is to love what you do.", "author": "Steve Jobs"},
     {"quote": "Talk is cheap. Show me the code.", "author": "Linus Torvalds"},
@@ -55,11 +54,13 @@ def get_db_connection():
 def init_db():
     conn = get_db_connection()
     cursor = conn.cursor()
+    cursor.execute('DROP TABLE IF EXISTS quote_history')
     cursor.execute('''
-        CREATE TABLE IF NOT EXISTS quote_history (
+        CREATE TABLE quote_history (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             quote TEXT NOT NULL,
             author TEXT NOT NULL,
+            is_favorite INTEGER DEFAULT 0,
             timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
     ''')
@@ -75,40 +76,42 @@ def get_random_quote():
     quote_text = ""
     quote_author = ""
     
-    # Try fetching from API
     try:
-        # dummyjson.com random quote endpoint
         response = requests.get('https://dummyjson.com/quotes/random', timeout=3.0)
         if response.status_code == 200:
             data = response.json()
             quote_text = data.get('quote', '').strip()
             quote_author = data.get('author', 'Unknown').strip()
     except Exception as e:
-        print(f"API Fetch failed: {e}. Falling back to offline quotes pool.")
+        print(f"API Fetch failed: {e}. Using fallback pool.")
     
-    # Fallback to local pool if API failed or returned empty values
     if not quote_text:
         selected = random.choice(FALLBACK_QUOTES)
         quote_text = selected["quote"]
         quote_author = selected["author"]
 
-    # Log to SQLite Database
+    # Log to DB and return the inserted note with ID
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
         cursor.execute(
-            'INSERT INTO quote_history (quote, author) VALUES (?, ?)',
+            'INSERT INTO quote_history (quote, author, is_favorite) VALUES (?, ?, 0)',
             (quote_text, quote_author)
         )
+        quote_id = cursor.lastrowid
         conn.commit()
+        
+        quote_row = conn.execute('SELECT * FROM quote_history WHERE id = ?', (quote_id,)).fetchone()
         conn.close()
+        
+        return jsonify({
+            'id': quote_row['id'],
+            'quote': quote_row['quote'],
+            'author': quote_row['author'],
+            'is_favorite': bool(quote_row['is_favorite'])
+        })
     except Exception as db_err:
-        print(f"Database insertion failed: {db_err}")
-
-    return jsonify({
-        'quote': quote_text,
-        'author': quote_author
-    })
+        return jsonify({'error': str(db_err)}), 500
 
 @app.route('/api/quotes/history', methods=['GET'])
 def get_history():
@@ -123,9 +126,46 @@ def get_history():
                 'id': item['id'],
                 'quote': item['quote'],
                 'author': item['author'],
+                'is_favorite': bool(item['is_favorite']),
                 'timestamp': item['timestamp']
             })
         return jsonify(history_list)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/quotes/history/<int:quote_id>', methods=['PATCH'])
+def toggle_favorite(quote_id):
+    try:
+        data = request.get_json() or {}
+        is_favorite = data.get('is_favorite')
+        
+        if is_favorite is None:
+            return jsonify({'error': 'is_favorite parameter is required'}), 400
+            
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        
+        quote = conn.execute('SELECT * FROM quote_history WHERE id = ?', (quote_id,)).fetchone()
+        if not quote:
+            conn.close()
+            return jsonify({'error': 'Quote not found'}), 404
+            
+        cursor.execute(
+            'UPDATE quote_history SET is_favorite = ? WHERE id = ?',
+            (1 if is_favorite else 0, quote_id)
+        )
+        conn.commit()
+        
+        updated = conn.execute('SELECT * FROM quote_history WHERE id = ?', (quote_id,)).fetchone()
+        conn.close()
+        
+        return jsonify({
+            'id': updated['id'],
+            'quote': updated['quote'],
+            'author': updated['author'],
+            'is_favorite': bool(updated['is_favorite']),
+            'timestamp': updated['timestamp']
+        })
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
@@ -142,5 +182,4 @@ def clear_history():
 
 if __name__ == '__main__':
     init_db()
-    # Run on Port 5004
     app.run(host='127.0.0.1', port=5004, debug=True)
