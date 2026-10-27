@@ -1,3 +1,10 @@
-*.db
 __pycache__/
-.DS_Store
+*.pyc
+*.pyo
+*.db
+.env
+venv/
+.vscode/
+*.egg-info/
+dist/
+build/

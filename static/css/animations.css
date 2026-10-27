@@ -1,0 +1,22 @@
+/* Animations */
+.fade-out-down {
+    opacity: 0;
+    transform: translateY(15px);
+}
+
+.fade-in-up {
+    animation: fadeInUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fadeInUp {
+    0% { opacity: 0; transform: translateY(15px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 768px) {
+    .quote-text { font-size: 1.6rem; }
+    .quote-card-container { padding: 2rem 0; }
+    .mark-left, .mark-right { font-size: 5.5rem; }
+    .mark-left { top: -2rem; left: 0; }
+    .mark-right { bottom: 0; right: 0; }
+}
